@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LightningV – Roleplay-Regelwerk</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy-mid: #1b2d42;
+    --navy-light: #243c57;
+    --blue: #1e5fa8;
+    --accent: #f0a500;
+    --accent-light: #fff4d6;
+    --silver: #e8ecf1;
+    --silver-mid: #d0d7e2;
+    --silver-light: #f4f6f9;
+    --white: #ffffff;
+    --text-dark: #0d1b2a;
+    --text-mid: #3d5166;
+    --text-light: #6b7f96;
+    --green: #1a6b3a;
+    --green-bg: #f0faf4;
+    --red: #7b1c1c;
+    --red-bg: #fdf2f2;
+    --radius: 6px;
+    --radius-lg: 10px;
+    --shadow: 0 2px 12px rgba(13,27,42,0.08);
+    --shadow-hover: 0 6px 24px rgba(13,27,42,0.14);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--silver-light);
+    color: var(--text-dark);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 60%, var(--navy-light) 100%);
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 80px);
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 56px 32px 48px;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 32px;
+  }
+  .header-seal {
+    width: 90px; height: 90px;
+    border: 3px solid rgba(255,255,255,0.35);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; flex-shrink: 0;
+    background: rgba(255,255,255,0.06);
+  }
+  .header-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(255,255,255,0.55); margin-bottom: 12px;
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 900; line-height: 1.12;
+    color: var(--white); margin-bottom: 10px;
+  }
+  .header-subtitle {
+    font-size: 14px; color: rgba(255,255,255,0.6);
+    font-weight: 300; letter-spacing: 0.5px;
+  }
+  .header-meta {
+    margin-top: 28px; display: flex; gap: 24px; flex-wrap: wrap;
+  }
+  .header-meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .header-meta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+  .header-meta-value { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); }
+  .header-stripe { height: 4px; background: linear-gradient(90deg, var(--accent) 0%, #ffd06b 50%, var(--accent) 100%); }
+
+  /* ── LAYOUT ── */
+  .page-wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ── INTRO ── */
+  .intro-block {
+    background: var(--white); border: 1px solid var(--silver-mid);
+    border-radius: var(--radius-lg); padding: 32px 36px;
+    margin: 36px 0 32px; border-left: 5px solid var(--accent);
+  }
+  .intro-block p { color: var(--text-mid); font-size: 15px; line-height: 1.75; }
+  .intro-block strong { color: var(--text-dark); }
+
+  /* ── WARNING BOX ── */
+  .warning-box {
+    background: #fff8e6; border: 1px solid #f0c060;
+    border-left: 5px solid var(--accent);
+    border-radius: var(--radius-lg); padding: 18px 24px;
+    margin-bottom: 32px; font-size: 14px; color: #5a3e00;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .warning-box .wi { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── TOC ── */
+  .toc-block {
+    background: var(--white); border: 1px solid var(--silver-mid);
+    border-radius: var(--radius-lg); padding: 32px 36px;
+    margin-bottom: 48px; box-shadow: var(--shadow);
+  }
+  .toc-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; color: var(--navy);
+    margin-bottom: 20px; padding-bottom: 14px;
+    border-bottom: 2px solid var(--silver-mid);
+  }
+  .toc-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;
+  }
+  .toc-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 13px; border-radius: var(--radius);
+    border: 1px solid var(--silver-mid);
+    text-decoration: none; color: var(--text-dark);
+    font-weight: 600; font-size: 13px;
+    transition: all 0.18s ease; background: var(--silver-light);
+  }
+  .toc-item:hover { background: var(--navy); color: var(--white); border-color: var(--navy); transform: translateY(-1px); box-shadow: var(--shadow); }
+  .toc-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 3px;
+    background: var(--navy); color: white; white-space: nowrap; flex-shrink: 0;
+  }
+
+  /* ── SECTION ── */
+  .rule-section { margin-bottom: 40px; }
+  .section-header {
+    background: var(--navy); border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 22px 28px; display: flex; align-items: center; gap: 16px;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700;
+    background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9);
+    padding: 4px 10px; border-radius: 4px; flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif; font-size: 22px;
+    font-weight: 700; color: white; line-height: 1.2;
+  }
+  .section-body {
+    background: var(--white); border: 1px solid var(--silver-mid);
+    border-top: none; border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    padding: 24px 28px 28px;
+  }
+
+  /* ── RULE ITEMS ── */
+  .rule-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .rule-item {
+    background: var(--silver-light); border: 1px solid var(--silver-mid);
+    border-radius: var(--radius); padding: 14px 16px;
+    border-left: 3px solid var(--navy-light);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .rule-item:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+  .rule-item-title {
+    font-size: 14px; font-weight: 700; color: var(--text-dark);
+    margin-bottom: 4px; display: flex; align-items: flex-start; gap: 8px;
+  }
+  .rule-code {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+    color: var(--blue); white-space: nowrap; flex-shrink: 0;
+    background: #edf2fc; padding: 1px 6px; border-radius: 3px; margin-top: 1px;
+  }
+  .rule-item-text { font-size: 13.5px; color: var(--text-mid); line-height: 1.6; }
+
+  /* special accents per section */
+  .rule-item.warn { border-left-color: var(--accent); }
+  .rule-item.warn .rule-code { color: #8a5c00; background: var(--accent-light); }
+  .rule-item.danger { border-left-color: var(--red); }
+  .rule-item.danger .rule-code { color: var(--red); background: var(--red-bg); }
+  .rule-item.ok { border-left-color: var(--green); }
+  .rule-item.ok .rule-code { color: var(--green); background: var(--green-bg); }
+
+  /* ── SPECIAL BOXES ── */
+  .info-box {
+    background: #edf2fc; border: 1px solid #b4c8e8; border-radius: var(--radius);
+    padding: 14px 16px; margin-top: 14px; font-size: 13.5px; color: var(--blue);
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .ampel-box {
+    background: var(--silver-light); border: 1px solid var(--silver-mid);
+    border-radius: var(--radius); padding: 14px 16px; margin-top: 8px;
+    font-size: 13.5px;
+  }
+  .ampel-title {
+    font-weight: 700; color: var(--text-dark); margin-bottom: 8px;
+    font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .ampel-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--silver-mid); font-size: 13.5px; color: var(--text-mid); }
+  .ampel-row:last-child { border-bottom: none; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .dot-green { background: #2ecc71; }
+  .dot-yellow { background: #f0a500; }
+  .dot-red { background: #e74c3c; }
+
+  /* ── FOOTER ── */
+  .footer-note {
+    background: var(--navy); color: rgba(255,255,255,0.75);
+    border-radius: var(--radius-lg); padding: 28px 32px; margin-top: 20px;
+    font-size: 13px; line-height: 1.75;
+    display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: start;
+  }
+  .footer-note-icon { font-size: 28px; margin-top: 2px; }
+  .footer-note strong { color: white; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .header-inner { grid-template-columns: 1fr; }
+    .header-seal { display: none; }
+    .toc-grid { grid-template-columns: 1fr 1fr; }
+    .section-body { padding: 18px 16px 22px; }
+    .page-wrap { padding: 0 14px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div>
+      <div class="header-eyebrow">LightningV Roleplay Server · Offizielles Regelwerk</div>
+      <h1 class="header-title">LightningV Roleplay-Regelwerk</h1>
+      <p class="header-subtitle">Verbindliche Verhaltensregeln für alle Spieler und Charaktere</p>
+      <div class="header-meta">
+        <div class="header-meta-item">
+          <span class="header-meta-label">Version</span>
+          <span class="header-meta-value">2025-I</span>
+        </div>
+        <div class="header-meta-item">
+          <span class="header-meta-label">Gültig ab</span>
+          <span class="header-meta-value">01. Januar 2025</span>
+        </div>
+        <div class="header-meta-item">
+          <span class="header-meta-label">Paragraphen</span>
+          <span class="header-meta-value">§1 – §19</span>
+        </div>
+        <div class="header-meta-item">
+          <span class="header-meta-label">Status</span>
+          <span class="header-meta-value">✅ Aktiv</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-seal">📋</div>
+  </div>
+  <div class="header-stripe"></div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- INTRO -->
+  <div class="intro-block">
+    <p>Diese Regeln gelten für alle Spieler und Charaktere auf dem LightningV-Server während des In-Game-Rollenspiels. <strong>Mit dem Betreten des Servers erklärt sich jeder Teilnehmer mit diesem Regelwerk einverstanden.</strong> Es ist Pflicht, sich stets an die hier festgelegten Vorgaben zu halten, unabhängig von Uhrzeit, Ort oder Situation im Spiel.</p>
+  </div>
+
+  <!-- HINWEIS -->
+  <div class="warning-box">
+    <span class="wi">⚠️</span>
+    <div><strong>Wichtiger Hinweis:</strong> Unwissenheit schützt nicht vor Konsequenzen. Jeder Spieler ist selbst dafür verantwortlich, sich über das aktuelle Regelwerk zu informieren. Bei Regeländerungen wird das Team über Discord informieren.</div>
+  </div>
+
+  <!-- INHALTSVERZEICHNIS -->
+  <div class="toc-block">
+    <div class="toc-title">📋 Inhaltsverzeichnis</div>
+    <div class="toc-grid">
+      <a href="#s1" class="toc-item"><span class="toc-num">§1</span> Gültigkeit</a>
+      <a href="#s2" class="toc-item"><span class="toc-num">§2</span> Accountnutzung</a>
+      <a href="#s3" class="toc-item"><span class="toc-num">§3</span> Generelles Verhalten</a>
+      <a href="#s4" class="toc-item"><span class="toc-num">§4</span> RP-Verhalten</a>
+      <a href="#s5" class="toc-item"><span class="toc-num">§5</span> Gruppierungen</a>
+      <a href="#s6" class="toc-item"><span class="toc-num">§6</span> Bugs</a>
+      <a href="#s7" class="toc-item"><span class="toc-num">§7</span> Aufzeichnungen</a>
+      <a href="#s8" class="toc-item"><span class="toc-num">§8</span> New Life</a>
+      <a href="#s9" class="toc-item"><span class="toc-num">§9</span> Konflikt &amp; Gewalt</a>
+      <a href="#s10" class="toc-item"><span class="toc-num">§10</span> Safezones</a>
+      <a href="#s11" class="toc-item"><span class="toc-num">§11</span> Räube &amp; Überfälle</a>
+      <a href="#s12" class="toc-item"><span class="toc-num">§12</span> Support-Regeln</a>
+      <a href="#s13" class="toc-item"><span class="toc-num">§13</span> Team-Regeln</a>
+      <a href="#s14" class="toc-item"><span class="toc-num">§14</span> Multi-Jobs</a>
+      <a href="#s15" class="toc-item"><span class="toc-num">§15</span> Entbannungsanträge</a>
+      <a href="#s16" class="toc-item"><span class="toc-num">§16</span> Ausschlussregelung</a>
+      <a href="#s17" class="toc-item"><span class="toc-num">§17</span> Charaktergestaltung</a>
+      <a href="#s18" class="toc-item"><span class="toc-num">§18</span> Regelwerk-Änderungen</a>
+      <a href="#s19" class="toc-item"><span class="toc-num">§19</span> Schlussbestimmungen</a>
+    </div>
+  </div>
+
+  <!-- §1 -->
+  <section class="rule-section" id="s1">
+    <div class="section-header">
+      <span class="section-num">§1</span>
+      <h2 class="section-title">Gültigkeit</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§1.0</span> Geltungsbereich</div>
+          <div class="rule-item-text">Diese Regeln gelten für alle Spieler und Charaktere auf dem LightningV-Server während des In-Game-Rollenspiels. Mit dem Betreten des Servers erklärt sich jeder Teilnehmer mit diesem Regelwerk einverstanden. Es ist Pflicht, sich stets an die hier festgelegten Vorgaben zu halten, unabhängig von Uhrzeit, Ort oder Situation im Spiel.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §2 -->
+  <section class="rule-section" id="s2">
+    <div class="section-header">
+      <span class="section-num">§2</span>
+      <h2 class="section-title">Accountnutzung</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item danger">
+          <div class="rule-item-title"><span class="rule-code">§2.1</span> Persönliche Accounts</div>
+          <div class="rule-item-text">Jeder Spieler darf nur einen Account bzw. Charakter aktiv nutzen. Mehrfach-Accounts, Account-Sharing oder -Verkauf sind strikt untersagt.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§2.2</span> Accountweitergabe</div>
+          <div class="rule-item-text">Account-Informationen (Passwörter, E-Mail etc.) dürfen nicht an Dritte weitergegeben werden. Bei vermutetem Missbrauch des eigenen Accounts ist sofort der Server-Support zu informieren.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §3 -->
+  <section class="rule-section" id="s3">
+    <div class="section-header">
+      <span class="section-num">§3</span>
+      <h2 class="section-title">Generelles Verhalten</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§3.1</span> Respekt und Fairness</div>
+          <div class="rule-item-text">Alle Spieler müssen sich respektvoll verhalten. Beleidigungen, Mobbing oder absichtliches Stören anderer sind inakzeptabel.</div>
+        </li>
+        <li class="rule-item danger">
+          <div class="rule-item-title"><span class="rule-code">§3.2</span> Verbotene Inhalte</div>
+          <div class="rule-item-text">Rassistische, sexistische oder anderweitig diskriminierende Äußerungen sind streng verboten. Sexueller Inhalt ist nur in sehr geringem, realistisch begründetem Umfang gestattet. Öffentliches Fluchen sollte sparsam und dem Charakter angemessen eingesetzt werden.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§3.3</span> OOC-Kommunikation</div>
+          <div class="rule-item-text">Das Gespräch findet grundsätzlich IC statt. OOC-Informationen dürfen nicht als Grundlage für In-Character-Handlungen genutzt werden. Team- und Administrations-Kommunikation ist vertraulich und darf nicht veröffentlicht werden.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §4 -->
+  <section class="rule-section" id="s4">
+    <div class="section-header">
+      <span class="section-num">§4</span>
+      <h2 class="section-title">RP-Verhalten</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§4.1</span> Realismus</div>
+          <div class="rule-item-text">Handlungen müssen realistisch sein; Charaktere verhalten sich, wie es in der Realität plausibel wäre. Starke Verletzungen oder Stürze haben entsprechende Folgen (z.B. längere Bewusstlosigkeit). Spieler müssen Angst um ihr „Leben" haben und Gefahren ernst nehmen. Unmögliche Aktionen (z.B. Sprünge aus großer Höhe ohne Verletzungsfolgen) gelten als Regelverstoß.</div>
+        </li>
+        <li class="rule-item danger">
+          <div class="rule-item-title"><span class="rule-code">§4.2</span> PowerRP</div>
+          <div class="rule-item-text">Powergaming ist untersagt. Das bedeutet, anderen Spielern durch unrealistische Aktionen oder erzwungene Handlungen Fähigkeiten oder Ergebnisse aufzuzwingen. Beispiele sind das Erzwingen eines sofortigen Erfolgs ohne Gegenwehrmöglichkeit oder physikalisch unmögliche Aktionen.</div>
+        </li>
+        <li class="rule-item danger">
+          <div class="rule-item-title"><span class="rule-code">§4.3</span> FailRP</div>
+          <div class="rule-item-text">FailRP bezeichnet das Scheitern an glaubwürdigem Rollenspiel durch unrealistisches Verhalten. Unmöglich erscheinende Aktionen (z.B. sofortiges Fliehen nach hoher Fallhöhe, Ignorieren sichtbarer Verletzungen) sind verboten. Auch das Vermischen von OOC-Wissen oder das Ignorieren realer Grenzen fällt darunter.</div>
+        </li>
+        <li class="rule-item danger">
+          <div class="rule-item-title"><span class="rule-code">§4.4</span> MetaRP</div>
+          <div class="rule-item-text">Metagaming ist die Verwendung von Informationen, die nur der Spieler kennt, aber der Charakter nicht wissen kann. Jeder Spieler darf sein Wissen nur IC verwenden. Informationen aus OOC-Chats, Foren oder Livestreams dürfen IC nicht angewendet werden.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§4.5</span> FearRP (Wert des Lebens)</div>
+          <div class="rule-item-text">Wird ein Charakter mit einer Waffe bedroht, muss er dem bewaffneten Spieler Folge leisten (Fear-Roleplay). Es ist nicht erlaubt, aus Angst „einfach wegzulaufen" oder sich sofort zu widersetzen. Charaktere sollen ihr Leben schützen und angemessen reagieren.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §5 -->
+  <section class="rule-section" id="s5">
+    <div class="section-header">
+      <span class="section-num">§5</span>
+      <h2 class="section-title">Gruppierungen &amp; Fraktionen</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§5.1</span> Anmeldung</div>
+          <div class="rule-item-text">Alle organisierten Gruppierungen (z.B. kriminelle Banden, Firmen, Behörden) müssen beim Server-Team angemeldet sein. Gruppierungen benötigen einen realistischen Hintergrund.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§5.2</span> Größenbegrenzung</div>
+          <div class="rule-item-text">Kriminelle Gruppierungen müssen eine realistische Größe aufweisen. Als Orientierung gilt ein Richtwert von maximal 15 aktiven Mitgliedern pro Gruppe. Überschreitungen dieser Grenze sind nur nach vorheriger Absprache und Genehmigung durch das Serverteam zulässig.</div>
+        </li>
+        <li class="rule-item danger">
+          <div class="rule-item-title"><span class="rule-code">§5.3</span> Rollenbindung</div>
+          <div class="rule-item-text">Es ist nicht erlaubt, parallel zu einer Strafverfolgungs- oder Rettungsfraktion (Polizei, Rettungskräfte) einen gegnerischen oder unabhängig agierenden illegalen Charakter zu führen. Polizeidienst und Medicdienst dürfen nicht gleichzeitig mit kriminellen Aktivitäten kombiniert werden.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §6 -->
+  <section class="rule-section" id="s6">
+    <div class="section-header">
+      <span class="section-num">§6</span>
+      <h2 class="section-title">Bugs</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item danger">
+          <div class="rule-item-title"><span class="rule-code">§6.1</span> Bug using</div>
+          <div class="rule-item-text">Das absichtliche Ausnutzen von Spielfehlern oder ungewollten Spielmechaniken (Bug using) ist strengstens untersagt. Darunter fällt zum Beispiel das Verwenden von Glitches oder das Duplizieren von Gegenständen, um sich einen Vorteil zu verschaffen.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§6.2</span> Fehler melden</div>
+          <div class="rule-item-text">Entdeckte Bugs sind sofort dem Team zu melden und dürfen nicht ausgenutzt werden.</div>
+        </li>
+        <li class="rule-item danger">
+          <div class="rule-item-title"><span class="rule-code">§6.3</span> Drittanbieter</div>
+          <div class="rule-item-text">Der Einsatz unerlaubter Tools, Cheats oder Modifikationen, die ein RP-untypisches Verhalten ermöglichen, ist verboten.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §7 -->
+  <section class="rule-section" id="s7">
+    <div class="section-header">
+      <span class="section-num">§7</span>
+      <h2 class="section-title">Aufzeichnungen, Datenschutz und Streaming</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§7.1</span> Hinweis</div>
+          <div class="rule-item-text">Mit Bestätigung des Regelwerks erklärst du dich damit einverstanden, dass dein Spielverhalten auf dem Server mit Bild und/oder Ton aufgezeichnet und auf Plattformen wie Twitch, YouTube, TikTok oder ähnlichen Diensten veröffentlicht werden darf.</div>
+        </li>
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§7.2</span> Aufzeichnungen</div>
+          <div class="rule-item-text">Das Erstellen von Gameplay-Aufnahmen oder Streams ist grundsätzlich erlaubt. Spieler sollten darauf achten, keine persönlichen Daten Dritter (wie echte Namen oder private Informationen) ohne Zustimmung offenzulegen.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§7.3</span> Streaming</div>
+          <div class="rule-item-text">Live-Streams dürfen genutzt werden, jedoch dürfen keine geheimen Serverinformationen oder Admin-Kommentare enthalten sein. RP-Inhalte können aufgezeichnet werden, solange sie nicht zur Regelumgehung (Meta-Gaming) verwendet werden.</div>
+        </li>
+        <li class="rule-item danger">
+          <div class="rule-item-title"><span class="rule-code">§7.4</span> Privatsphäre</div>
+          <div class="rule-item-text">Die Privatsphäre anderer Spieler ist zu respektieren. Team- und Nutzerdiskussionen, Passwörter oder Moderationsentscheidungen dürfen nicht ohne Erlaubnis veröffentlicht werden. Darunter fallen auch Support-Gespräche — diese dürfen nicht gestreamt werden!</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §8 -->
+  <section class="rule-section" id="s8">
+    <div class="section-header">
+      <span class="section-num">§8</span>
+      <h2 class="section-title">New Life &amp; Bewusstlosigkeit</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§8.1</span> New-Life-Regel</div>
+          <div class="rule-item-text">Nach dem Tod darf der Spieler an der Situation nicht mehr teilnehmen. Zudem verliert der Spieler sämtliche IC-Erinnerungen an die Situation, die zum Tod geführt hat.</div>
+        </li>
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§8.2</span> Wiederbelebung</div>
+          <div class="rule-item-text">Medics und weitere Rettungskräfte dürfen Wunden versorgen und angeschlagene Spieler reanimieren. Der Medic allein darf entscheiden, ob ein Spieler wiederbelebt werden kann oder nicht. Dabei muss er dennoch das Verletzungsmuster beachten.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§8.3</span> Bewusstlosigkeit</div>
+          <div class="rule-item-text">Ein bewusstloser Charakter darf nicht agieren (z.B. keine Kommunikation oder Gegenwehr). Jede Wiederbelebung wird RP-technisch berücksichtigt (Krankenhaus etc.).</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §9 -->
+  <section class="rule-section" id="s9">
+    <div class="section-header">
+      <span class="section-num">§9</span>
+      <h2 class="section-title">Konflikt- &amp; Gewaltregeln</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item danger">
+          <div class="rule-item-title"><span class="rule-code">§9.1</span> RDM/VDM</div>
+          <div class="rule-item-text">Zufällige Gewalt gegen Unbeteiligte ist strikt verboten. Random Deathmatch (RDM) und Vehicle Deathmatch (VDM), das willkürliche Erschießen oder Überfahren anderer ohne RP-Kontext, sind nicht erlaubt. Vor jeder tödlichen Aktion muss ein RP-Kontext bzw. eine klare Rechtfertigung vorliegen.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§9.2</span> Eskalation</div>
+          <div class="rule-item-text">Schusswaffen dürfen nicht ohne Vorwarnung eingesetzt werden. In Auseinandersetzungen sind mindestens zwei klare Drohungen auszusprechen (z.B. „Gib sofort dein Geld!" und „Keine Bewegung!"). Erst danach ist der Einsatz tödlicher Gewalt gerechtfertigt.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§9.3</span> Geiselnahmen &amp; Überfälle</div>
+          <div class="rule-item-text">Geiseln sind wie in der Realität zu behandeln. Opfer müssen verängstigt werden, Forderungen (etwa Lösegeld, Rauübergabe) sind deutlich zu formulieren. Eine akute Notlage (z.B. „Freund ist verletzt, rede nicht!") rechtfertigt sofortiges Gehorchen. Exekutionen von Geiseln oder sofortiges Erschießen von Opfern ohne RP-Grund sind untersagt. Opfer müssen kooperieren (FearRP).</div>
+        </li>
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§9.4</span> Waffenübergabe</div>
+          <div class="rule-item-text">Bewaffnete Gegner dürfen erst dann entwaffnet werden, wenn sie kampfunfähig oder tot sind.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §10 -->
+  <section class="rule-section" id="s10">
+    <div class="section-header">
+      <span class="section-num">§10</span>
+      <h2 class="section-title">Safezones</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§10.1</span> Definition</div>
+          <div class="rule-item-text">Bestimmte Orte sind gewaltfreie Zonen, in denen keine Straftaten erlaubt sind. In unserem Fall ist es das Medical Hospital und der Airport.</div>
+        </li>
+        <li class="rule-item danger">
+          <div class="rule-item-title"><span class="rule-code">§10.2</span> Verbotene Aktionen</div>
+          <div class="rule-item-text">In Safezones darf keine Straftat begangen werden. Spieler dürfen dort nicht beraubt oder verletzt werden. Jedoch kann sich eine RP-Situation dort hinein verlegen (z.B. eine Verfolgungsjagd mit dem PD). Die Lieblingsfarbe ist Goldbraun.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §11 -->
+  <section class="rule-section" id="s11">
+    <div class="section-header">
+      <span class="section-num">§11</span>
+      <h2 class="section-title">Räube &amp; Überfälle</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§11.1</span> Lösegelder</div>
+          <div class="rule-item-text">Pro Geisel darf ein Lösegeld von bis zu 20.000 $ gefordert werden. Maximal jedoch 100.000 $ unabhängig davon wie viele Geiseln es gibt.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§11.2</span> Mindestbesatzung der Polizei</div>
+          <div class="rule-item-text">Wir haben im Tablet ein Ampelsystem darauf ist zu achten!</div>
+          <div class="ampel-box">
+            <div class="ampel-title">🚦 Ampelsystem – Mindestbesatzung</div>
+            <div class="ampel-row"><span class="dot dot-green"></span><strong>Bankräube:</strong>&nbsp;Ab Grün</div>
+            <div class="ampel-row"><span class="dot dot-green"></span><strong>Geiselnahmen:</strong>&nbsp;Ab Grün</div>
+            <div class="ampel-row"><span class="dot dot-yellow"></span><strong>Ladenräube:</strong>&nbsp;Ab Gelb</div>
+            <div class="ampel-row"><span class="dot dot-yellow"></span><strong>Sonstiges:</strong>&nbsp;Ab Gelb</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §12 -->
+  <section class="rule-section" id="s12">
+    <div class="section-header">
+      <span class="section-num">§12</span>
+      <h2 class="section-title">Support-Regeln</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§12.1</span> Hilfsbereitschaft</div>
+          <div class="rule-item-text">Supporter und Helfer sollen neuen Spielern freundlich und verständlich begegnen. Fragen von Unklarheiten werden, soweit möglich, im IC-Kontext beantwortet oder auf vorhandene Dokumente verwiesen.</div>
+        </li>
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§12.2</span> OOC-Hilfe</div>
+          <div class="rule-item-text">Für technische Probleme oder administrative Fragen kann der Support (z.B. Discord-Supportkanal) kontaktiert werden. Supporter antworten sachlich und verweisen gegebenenfalls auf die entsprechenden Regeltexte.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§12.3</span> Unparteilichkeit</div>
+          <div class="rule-item-text">Supporter dürfen sich in laufende RP-Szenen nicht einmischen, sofern sie nicht offiziell gerufen sind. Eine Diskretion gegenüber laufendem RP ist stets zu wahren.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§12.4</span> IC-Hilfe</div>
+          <div class="rule-item-text">Solltest du während einer IC-Situation Unterstützung durch das Team benötigen, könnt ihr einen /calladmin mit kurzer Begründung verwenden. Ein Clip als Beweismittel ist zwingend erforderlich. Die laufende RP-Situation darf dadurch nicht unterbrochen oder gestört werden.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §13 -->
+  <section class="rule-section" id="s13">
+    <div class="section-header">
+      <span class="section-num">§13</span>
+      <h2 class="section-title">Team-Regeln</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§13.1</span> Neutralität</div>
+          <div class="rule-item-text">Admins und Moderatoren handeln stets unparteiisch. Bevorzugungen oder Benachteiligungen aufgrund persönlicher Beziehungen sind verboten. Teammitglieder dürfen im aktiven Rollenspiel (sofern nicht explizit erforderlich) nicht eingreifen oder zusätzliche Vorteile nutzen.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§13.2</span> Vertraulichkeit</div>
+          <div class="rule-item-text">Interne Informationen (Team-Chats, Protokolle etc.) sind strikt vertraulich zu behandeln und dürfen nicht veröffentlicht werden.</div>
+        </li>
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§13.3</span> Dienstbetrieb</div>
+          <div class="rule-item-text">Server-Teammitglieder geben sich außerhalb des Dienstes IC, solange sie nicht offiziell angemeldet sind. Im Dienst müssen sie sich als solche zu erkennen geben, vermeiden aber das Stören des fortlaufenden RP und kommunizieren soweit möglich über interne Kanäle.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §14 -->
+  <section class="rule-section" id="s14">
+    <div class="section-header">
+      <span class="section-num">§14</span>
+      <h2 class="section-title">Multi-Jobs</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§14.1</span> Mehrfachbeschäftigung</div>
+          <div class="rule-item-text">Ein Charakter darf mehrere Berufe ausüben, sofern diese zeitlich und logisch vereinbar sind. Beispielsweise kann ein Spieler tagsüber Angestellter und abends Taxifahrer sein, muss diese Rollen aber realistisch trennen.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§14.2</span> Jobwechsel</div>
+          <div class="rule-item-text">Häufiger Jobwechsel (Job-Hopping) ohne nachvollziehbaren Grund ist zu vermeiden. Ein Charakter kann nicht unbegrenzt viele Vollzeitjobs parallel führen. Jede Erwerbstätigkeit muss im RP begründet sein.</div>
+        </li>
+        <li class="rule-item danger">
+          <div class="rule-item-title"><span class="rule-code">§14.3</span> Ausnutzung</div>
+          <div class="rule-item-text">Übertriebener Einsatz der Multi-Job-Funktion, etwa um gleichzeitig mehrere Einkommensquellen vollständig zu nutzen, ist nicht gestattet. Geld- oder Ressourcenvermittlung zwischen den Jobs muss glaubhaft sein.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §15 -->
+  <section class="rule-section" id="s15">
+    <div class="section-header">
+      <span class="section-num">§15</span>
+      <h2 class="section-title">Entbannungsanträge</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§15.1</span> Antragstellung</div>
+          <div class="rule-item-text">Gebannte Spieler können jederzeit einen Entbannungsantrag stellen. Dieser muss eine nachvollziehbare Darstellung des Verstoßes, Reue sowie eine Besserungsperspektive enthalten.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§15.2</span> Verfahren</div>
+          <div class="rule-item-text">Der Antrag ist schriftlich an das Serverteam zu richten (z.B. über Discord-Ticket). Respektlose oder beleidigende Formulierungen führen zur Ablehnung. Fehlende oder unvollständige Angaben können zur Verzögerung oder Ablehnung des Antrags führen.</div>
+        </li>
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§15.3</span> Entscheidung</div>
+          <div class="rule-item-text">Das Team prüft den Antrag und informiert den Antragsteller schriftlich über die Entscheidung. Die Entscheidung ist endgültig; weitere Anträge müssen neue, relevante Argumente enthalten.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §16 -->
+  <section class="rule-section" id="s16">
+    <div class="section-header">
+      <span class="section-num">§16</span>
+      <h2 class="section-title">Ausschlussregelung</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item danger">
+          <div class="rule-item-title"><span class="rule-code">§16.1</span> Permanenter Ausschluss</div>
+          <div class="rule-item-text">Schwere oder wiederholte Regelverstöße können zum dauerhaften Ausschluss vom Server führen. Dies gilt insbesondere für wiederholtes RDM/VDM, Ausnutzung von Bugs, massive OOC-Belästigung oder gezielte Regelumgehung.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§16.2</span> Mehrfachaccounts</div>
+          <div class="rule-item-text">Jeder Spieler hat das Recht, einen Antrag auf einen zweiten Char zu stellen. Es ist jedoch verboten, Polizei und Crime gleichzeitig zu bespielen.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §17 -->
+  <section class="rule-section" id="s17">
+    <div class="section-header">
+      <span class="section-num">§17</span>
+      <h2 class="section-title">Charaktergestaltung und Namensgebung</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§17.1</span> Namensregeln</div>
+          <div class="rule-item-text">Charakternamen müssen realistisch sein (in der Regel Vor- und Nachname). Fantasienamen, Markennamen, Nummern oder Sonderzeichen sind nicht erlaubt. Doppelnamen oder extreme Abkürzungen sollen vermieden werden.</div>
+        </li>
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§17.2</span> Hintergrund</div>
+          <div class="rule-item-text">Jeder Charakter benötigt eine plausible Biografie (Alter, Herkunft, Vorgeschichte). Beruf, schulische Ausbildung und Geldquellen müssen im RP erklärbar sein.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§17.3</span> Änderungen</div>
+          <div class="rule-item-text">Häufige Namens- oder Rollenwechsel sind zu begrenzen. Namensänderungen sollten gut begründet und dem Serverteam mitgeteilt werden. Das Team kann Änderungen untersagen, wenn sie unrealistisch oder missbräuchlich erscheinen.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §18 -->
+  <section class="rule-section" id="s18">
+    <div class="section-header">
+      <span class="section-num">§18</span>
+      <h2 class="section-title">Regelwerk-Änderungen</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§18.1</span> Vorbehalt</div>
+          <div class="rule-item-text">Das Server-Team behält sich das Recht vor, dieses Regelwerk bei Bedarf anzupassen oder zu ergänzen. Änderungen werden zeitnah im Discord bekannt gegeben.</div>
+        </li>
+        <li class="rule-item warn">
+          <div class="rule-item-title"><span class="rule-code">§18.2</span> Gültigkeit</div>
+          <div class="rule-item-text">Die jeweils aktuell veröffentlichte Fassung des Regelwerks ist verbindlich. Spieler müssen sich vor Wiedereinstieg oder Änderungen über den gültigen Stand informieren.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §19 -->
+  <section class="rule-section" id="s19">
+    <div class="section-header">
+      <span class="section-num">§19</span>
+      <h2 class="section-title">Schlussbestimmungen</h2>
+    </div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§19.1</span> Inkrafttreten</div>
+          <div class="rule-item-text">Diese Regeln treten mit ihrer Veröffentlichung in Kraft. Ab diesem Zeitpunkt gelten sie für alle Spieler gleichermaßen.</div>
+        </li>
+        <li class="rule-item ok">
+          <div class="rule-item-title"><span class="rule-code">§19.2</span> Zustimmung</div>
+          <div class="rule-item-text">Mit dem Betreten des LightningV-Servers erklärt sich jeder Spieler mit diesen Bestimmungen einverstanden und verpflichtet sich, sie einzuhalten. Bei Unklarheiten entscheidet das Serverteam endgültig, wobei dieses Regelwerk stets zugrunde gelegt wird.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="footer-note">
+    <div class="footer-note-icon">⚖️</div>
+    <div>
+      <strong>LightningV Roleplay-Server · Offizielles Regelwerk 2025</strong><br>
+      Dieses Regelwerk gilt ausschließlich für den LightningV Roleplay-Server. Alle Bestimmungen sind verbindlich und gelten für sämtliche Spieler ohne Ausnahme. Das Serverteam behält sich vor, Regeln jederzeit anzupassen. Änderungen werden über Discord kommuniziert.<br><br>
+      <strong>Legende:</strong>&nbsp;
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#eaf6ed;color:#1a6b3a;border:1px solid #b4dfc0;padding:3px 8px;border-radius:4px;font-size:12px;font-weight:700;">✅ Erlaubt / Info</span>&nbsp;
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#fff4d6;color:#8a5c00;border:1px solid #f0c060;padding:3px 8px;border-radius:4px;font-size:12px;font-weight:700;">⚠️ Achtung / Einschränkung</span>&nbsp;
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#fdecea;color:#7b1c1c;border:1px solid #f5c0bb;padding:3px 8px;border-radius:4px;font-size:12px;font-weight:700;">🚫 Verboten / Streng</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
